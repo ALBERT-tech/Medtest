@@ -320,7 +320,14 @@ function updateStats() {
     elLatest.textContent = latest;
   }
 }
-
+function escapeHtml(str) {
+  return String(str ?? '')
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#039;');
+}
 function updateTable() {
   const container = document.getElementById('table-container');
   if (!container) return;
@@ -365,16 +372,6 @@ function updateTable() {
   `;
 
   container.innerHTML = html;
-}
-
-
-function escapeHtml(str) {
-  return String(str ?? '')
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#039;');
 }
 
 function handleApplyFilters() {
