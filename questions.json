@@ -1,4 +1,3 @@
-// questions.json
 {
   "questionnaire_id": "patient_form",
   "version": "2026-02-01",
@@ -574,3 +573,4 @@
       ] }
   ]
 }
+
