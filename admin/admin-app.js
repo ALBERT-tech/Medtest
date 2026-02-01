@@ -14,6 +14,8 @@ const adminState = {
     fromDate: null,
     toDate: null,
 };
+let QUESTIONS_SPEC = null;
+let QUESTION_INDEX = null; // { [id]: { label, type, optionsMap } }
 
 // Инициализация
 document.addEventListener('DOMContentLoaded', () => {
