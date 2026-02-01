@@ -185,7 +185,7 @@ async function apiRequest(endpoint, options = {}) {
 async function handleLogin(event) {
     event.preventDefault();
 
-    const password = document.getElementById('admin-password').value;
+    const password = document.getElementById('password').value;
     const loginBtn = document.getElementById('login-btn');
 
     try {
