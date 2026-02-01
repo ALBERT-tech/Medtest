@@ -182,50 +182,55 @@ async function apiRequest(endpoint, options = {}) {
 // АВТОРИЗАЦИЯ
 // ====================
 
-async function handleLogin(event) {
-    event.preventDefault();
+async function handleLogin(e) {
+  e.preventDefault();
 
-    const password = document.getElementById('password').value;
-   const loginBtn =
-    event.submitter ||
-    event.currentTarget.querySelector('button[type="submit"]');
+  const passwordInput = document.getElementById('password');
+  const password = passwordInput.value;
+  const errorDiv = document.getElementById('login-error');
 
-try {
-    if (loginBtn) {
-        loginBtn.disabled = true;
-        loginBtn.textContent = 'Вход...';
-    }
+  if (!password) {
+    errorDiv.textContent = 'Введите пароль';
+    return;
+  }
 
-    const result = await apiRequest('/admin/login', {
-        method: 'POST',
-        body: JSON.stringify({ password })
+  try {
+    showStatus('Проверка пароля...', 'loading');
+
+    const response = await fetch(`${BACKEND_URL}/admin/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password })
     });
 
-
-        // Сохранить JWT токен
-        adminState.jwtToken = result.token;
-        adminState.isLoggedIn = true;
-
-        // Сохранить в localStorage на 1 час
-        const expiry = Date.now() + (60 * 60 * 1000); // 1 час
-        localStorage.setItem('admin_jwt_token', result.token);
-        localStorage.setItem('admin_token_expiry', expiry.toString());
-
-        showScreen('admin');
-        await loadData();
-
-        showStatus('✓ Успешный вход');
-
-    } catch (error) {
-        console.error('Ошибка входа:', error);
-        showStatus(`❌ Ошибка входа: ${error.message}`, 'error');
-    } finally {
-        if (loginBtn) {
-  loginBtn.disabled = false;
-  loginBtn.textContent = 'Войти';
-}
-
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({}));
+      throw new Error(error.error || 'Неверный пароль');
     }
+
+    const data = await response.json();
+    const jwtToken = data.token;
+
+    adminState.jwtToken = jwtToken;
+    adminState.isLoggedIn = true;
+
+    localStorage.setItem('admin_jwt_token', jwtToken);
+    const expiryTime = Date.now() + (60 * 60 * 1000);
+    localStorage.setItem('admin_token_expiry', String(expiryTime));
+
+    errorDiv.textContent = '';
+    passwordInput.value = '';
+
+    await loadData();
+    showScreen('admin');
+    showStatus('✓ Вход выполнен', 'success');
+
+  } catch (error) {
+    console.error('Login error:', error);
+    errorDiv.textContent = error.message || 'Ошибка входа';
+    passwordInput.select();
+    showStatus(`❌ ${error.message}`, 'error');
+  }
 }
 
 function handleLogout() {
@@ -276,9 +281,12 @@ async function loadData() {
 // ====================
 
 function showScreen(screenName) {
-    document.getElementById('login-screen').style.display = screenName === 'login' ? 'block' : 'none';
-    document.getElementById('admin-screen').style.display = screenName === 'admin' ? 'block' : 'none';
+  document.querySelectorAll('.screen').forEach(screen => {
+    screen.classList.remove('active');
+  });
+  document.getElementById(`screen-${screenName}`).classList.add('active');
 }
+
 
 function showStatus(message, type = 'info') {
     const statusDiv = document.getElementById('export-status');
