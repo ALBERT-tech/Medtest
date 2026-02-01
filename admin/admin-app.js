@@ -258,8 +258,6 @@ function renderTable() {
     html += '<th>Возраст</th>';
     html += '<th>Вес (кг)</th>';
     html += '<th>Рост (см)</th>';
-    html += '<th>ИМТ</th>';
-    html += '<th>Недержание</th>';
     html += '</tr></thead>';
     html += '<tbody>';
 
@@ -274,8 +272,6 @@ function renderTable() {
         html += `<td>${answers.age || '-'}</td>`;
         html += `<td>${answers.weight_kg || '-'}</td>`;
         html += `<td>${answers.height_cm || '-'}</td>`;
-        html += `<td>${computed.bmi || '-'}</td>`;
-        html += `<td>${answers.incontinence_episodes || '-'}</td>`;
         html += '</tr>';
     });
 
