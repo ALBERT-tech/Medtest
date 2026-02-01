@@ -421,16 +421,6 @@
   }
 }
 
-
-    // return inserted row(s)
-    try {
-      const data = JSON.parse(text);
-      return Array.isArray(data) ? data[0] : data;
-    } catch {
-      return null;
-    }
-  }
-
   // ------------------------
   // Actions
   // ------------------------
@@ -602,4 +592,5 @@
 
   boot();
 })();
+
 
