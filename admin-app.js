@@ -332,7 +332,7 @@ function updateTable() {
     return;
   }
 
-  const preview = rows.slice(0, 50);
+  const preview = rows.slice(0, 100); // можно 50/100 — как тебе удобнее
 
   let html = `
     <table class="data-table">
@@ -340,7 +340,6 @@ function updateTable() {
         <tr>
           <th>Дата</th>
           <th>Шифр</th>
-          <th>Ответы</th>
         </tr>
       </thead>
       <tbody>
@@ -355,7 +354,6 @@ function updateTable() {
       <tr>
         <td>${escapeHtml(date)}</td>
         <td>${escapeHtml(r.code || '')}</td>
-        <td><pre>${escapeHtml(JSON.stringify(r.answers, null, 2))}</pre></td>
       </tr>
     `;
   }
@@ -368,6 +366,7 @@ function updateTable() {
 
   container.innerHTML = html;
 }
+
 
 function escapeHtml(str) {
   return String(str ?? '')
