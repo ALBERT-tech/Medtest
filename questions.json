@@ -1,0 +1,576 @@
+// questions.json
+{
+  "questionnaire_id": "patient_form",
+  "version": "2026-02-01",
+  "ui": { "mode": "single_question_per_page" },
+  "questions": [
+    { "id": "age", "order": 10, "type": "number", "label": "Возраст", "required": true, "constraints": { "min": 18, "max": 120, "step": 1 } },
+    { "id": "residence_type", "order": 20, "type": "select", "label": "Место жительства", "required": true,
+      "options": [ { "value": "city", "label": "Город" }, { "value": "rural", "label": "Сельская местность" } ] },
+
+    { "id": "weight_kg", "order": 30, "type": "number", "label": "Вес (кг)", "required": true, "constraints": { "min": 45, "max": 200, "step": 0.1 } },
+    { "id": "height_cm", "order": 40, "type": "number", "label": "Рост (см)", "required": true, "constraints": { "min": 120, "max": 220, "step": 1 } },
+    { "id": "waist_cm", "order": 50, "type": "number", "label": "Талия (см)", "required": true, "constraints": { "min": 45, "max": 150, "step": 1 } },
+
+    { "id": "employment_status", "order": 60, "type": "select", "label": "Ваш текущий статус занятости", "required": true,
+      "options": [
+        { "value": "full_time", "label": "Работаю полный день" },
+        { "value": "part_time", "label": "Работаю неполный день" },
+        { "value": "not_working", "label": "Не работаю (домохозяйка, пенсия, безработица, отпуск по уходу и т.п.)" }
+      ] },
+
+    { "id": "work_activity", "order": 70, "type": "select", "label": "Характер работы (основной вид активности)", "required": true,
+      "options": [
+        { "value": "sedentary", "label": "Сидячая (офис, за компьютером)" },
+        { "value": "mostly_standing", "label": "В основном стоячая (продавец, учитель и т.п.)" },
+        { "value": "physically_active", "label": "Физически активная (подъём тяжестей, много ходьбы/бега)" },
+        { "value": "mixed", "label": "Смешанная" }
+      ] },
+
+    { "id": "education", "order": 80, "type": "select", "label": "Образование", "required": true,
+      "options": [
+        { "value": "secondary", "label": "Среднее" },
+        { "value": "vocational", "label": "Среднее специальное" },
+        { "value": "higher", "label": "Высшее" },
+        { "value": "none", "label": "Без образования" }
+      ] },
+
+    { "id": "marital_status", "order": 90, "type": "select", "label": "Семейное положение", "required": true,
+      "options": [
+        { "value": "single", "label": "Не замужем" },
+        { "value": "divorced", "label": "В разводе" },
+        { "value": "married", "label": "Замужем" },
+        { "value": "relationship", "label": "В отношениях" }
+      ] },
+
+    { "id": "smoking", "order": 100, "type": "select", "label": "Курите ли Вы сейчас?", "required": true,
+      "options": [
+        { "value": "yes", "label": "Курение одной и более сигарет в день" },
+        { "value": "no", "label": "Не курю" }
+      ] },
+
+    { "id": "cigs_per_day", "order": 110, "type": "number",
+      "label": "Если Вы курите, то сколько сигарет в среднем в день Вы выкуриваете?",
+      "constraints": { "min": 0, "max": 100, "step": 1 },
+      "show_if": { "id": "smoking", "eq": "yes" },
+      "required_if": { "id": "smoking", "eq": "yes" } },
+
+    { "id": "alcohol_frequency", "order": 120, "type": "select", "label": "Как часто Вы употребляете алкогольные напитки?", "required": true,
+      "options": [
+        { "value": "never", "label": "Никогда" },
+        { "value": "monthly_or_less", "label": "Раз в месяц и реже" },
+        { "value": "2_4_month", "label": "2–4 раза в месяц" },
+        { "value": "2_3_week", "label": "2–3 раза в неделю" }
+      ] },
+
+    { "id": "alcohol_drinks_per_session", "order": 130, "type": "select",
+      "label": "Какое количество алкогольных напитков (сколько порций) Вы выпиваете обычно за 1 раз?",
+      "show_if": { "id": "alcohol_frequency", "neq": "never" },
+      "required_if": { "id": "alcohol_frequency", "neq": "never" },
+      "options": [
+        { "value": "1_2", "label": "1–2 порции" },
+        { "value": "3_4", "label": "3–4 порции" },
+        { "value": "5_6", "label": "5–6 порций" },
+        { "value": "7_9", "label": "7–9 порций" }
+      ] },
+
+    { "id": "alcohol_6plus_frequency", "order": 140, "type": "select",
+      "label": "Как часто Вы употребляете за один раз 6 или более порций?",
+      "show_if": { "id": "alcohol_frequency", "neq": "never" },
+      "required_if": { "id": "alcohol_frequency", "neq": "never" },
+      "options": [
+        { "value": "never", "label": "Никогда" },
+        { "value": "monthly_or_less", "label": "Раз в месяц и реже" },
+        { "value": "2_4_month", "label": "2–4 раза в месяц" },
+        { "value": "2_3_week", "label": "2–3 раза в неделю" },
+        { "value": "4plus_week", "label": "Более 4 раз в неделю" }
+      ] },
+
+    { "id": "pregnancies_total", "order": 150, "type": "number", "label": "Беременности (кол-во)", "required": true,
+      "constraints": { "min": 0, "max": 30, "step": 1 } },
+
+    { "id": "age_first_birth", "order": 160, "type": "number", "label": "Возраст на момент 1 родов?",
+      "constraints": { "min": 12, "max": 50, "step": 1 },
+      "show_if": { "id": "pregnancies_total", "gt": 0 } },
+
+    { "id": "pregnancy_complications", "order": 170, "type": "multiselect", "label": "Осложнения беременности",
+      "show_if": { "id": "pregnancies_total", "gt": 0 },
+      "options": [
+        { "value": "preeclampsia_eclampsia", "label": "Преэклампсия/эклампсия" },
+        { "value": "ponrp", "label": "ПОНРП (преждевременная отслойка нормально расположенной плаценты)" },
+        { "value": "antenatal_fetal_death", "label": "Антенатальная гибель плода" },
+        { "value": "none", "label": "Не было" }
+      ],
+      "constraints": { "exclusiveOptions": ["none"] } },
+
+    { "id": "births_count", "order": 180, "type": "number", "label": "Кол-во родов",
+      "constraints": { "min": 0, "max": 12, "step": 1 },
+      "show_if": { "id": "pregnancies_total", "gt": 0 } },
+
+    { "id": "gestation_weeks_delivery", "order": 190, "type": "number",
+      "label": "Срок беременности в неделях (родоразрешение на каком сроке?)",
+      "constraints": { "min": 25, "max": 42, "step": 1 },
+      "show_if": { "id": "births_count", "gt": 0 },
+      "required_if": { "id": "births_count", "gt": 0 } },
+
+    { "id": "abortions_count", "order": 200, "type": "number", "label": "Количество абортов",
+      "constraints": { "min": 0, "max": 30, "step": 1 },
+      "show_if": { "id": "pregnancies_total", "gt": 0 } },
+
+    { "id": "abortion_type", "order": 210, "type": "select", "label": "Какие аборты?",
+      "show_if": { "id": "abortions_count", "gt": 0 },
+      "required_if": { "id": "abortions_count", "gt": 0 },
+      "options": [
+        { "value": "surgical", "label": "Хирургические" },
+        { "value": "medical", "label": "Медикаментозные" }
+      ] },
+
+    { "id": "miscarriages_early", "order": 220, "type": "number", "label": "Кол-во выкидышей на ранних сроках до 12 недели",
+      "constraints": { "min": 0, "max": 10, "step": 1 },
+      "show_if": { "id": "pregnancies_total", "gt": 0 } },
+
+    { "id": "miscarriages_late", "order": 230, "type": "number", "label": "Кол-во выкидышей на поздних сроках более 12 недель",
+      "constraints": { "min": 0, "max": 10, "step": 1 },
+      "show_if": { "id": "pregnancies_total", "gt": 0 } },
+
+    { "id": "ectopic_pregnancies", "order": 240, "type": "number", "label": "Кол-во внематочных беременностей",
+      "constraints": { "min": 0, "max": 5, "step": 1 },
+      "show_if": { "id": "pregnancies_total", "gt": 0 } },
+
+    { "id": "menarche_age", "order": 250, "type": "number", "label": "Менструации: начало (возраст)", "required": true,
+      "constraints": { "min": 7, "max": 20, "step": 1 } },
+
+    { "id": "cycle_length_days", "order": 260, "type": "number", "label": "Продолжительность менструального цикла (в днях)", "required": true,
+      "constraints": { "min": 15, "max": 45, "step": 1 } },
+
+    { "id": "cycle_regular", "order": 270, "type": "boolean", "label": "Регулярность цикла", "required": true,
+      "labels": { "true": "Да", "false": "Нет" } },
+
+    { "id": "menses_duration", "order": 280, "type": "select",
+      "label": "Средняя длительность менструации (дней с кровянистыми выделениями)",
+      "required": true,
+      "options": [
+        { "value": "1_3", "label": "1–3" },
+        { "value": "4_5", "label": "4–5" },
+        { "value": "6_7", "label": "6–7" },
+        { "value": "gt7", "label": "Более 7" }
+      ] },
+
+    { "id": "heavy_days_count", "order": 290, "type": "select",
+      "label": "Сколько дней из цикла вы считаете «самыми обильными»?",
+      "required": true,
+      "options": [
+        { "value": "0_1", "label": "0–1" },
+        { "value": "2_3", "label": "2–3" },
+        { "value": "4plus", "label": "и более" }
+      ] },
+
+    { "id": "pads_per_day_heaviest", "order": 300, "type": "select",
+      "label": "В самый обильный день сколько полностью пропитанных прокладок/тампонов вы используете за сутки?",
+      "required": true,
+      "options": [
+        { "value": "1_3", "label": "1–3" },
+        { "value": "4_6", "label": "4–6" },
+        { "value": "7_9", "label": "7–9" },
+        { "value": "10plus", "label": "10 и более" }
+      ] },
+
+    { "id": "change_every_2h", "order": 310, "type": "select",
+      "label": "Приходится ли менять прокладку/тампон каждые ≤2 часов в самый обильный день?",
+      "required": true,
+      "options": [
+        { "value": "never", "label": "Никогда" },
+        { "value": "sometimes", "label": "Иногда" },
+        { "value": "often", "label": "Часто" }
+      ] },
+
+    { "id": "change_at_night", "order": 320, "type": "select",
+      "label": "Приходится ли менять прокладку/тампон ночью (по крайней мере один раз за ночь)?",
+      "required": true,
+      "options": [
+        { "value": "never", "label": "Никогда" },
+        { "value": "sometimes", "label": "Иногда" },
+        { "value": "almost_every_night", "label": "Почти каждую ночь" }
+      ] },
+
+    { "id": "large_clots", "order": 330, "type": "select",
+      "label": "Бывают ли у вас крупные сгустки крови (примерно ≥1 см)?",
+      "required": true,
+      "options": [
+        { "value": "no", "label": "Нет" },
+        { "value": "sometimes", "label": "Да, иногда" },
+        { "value": "often", "label": "Да, часто" }
+      ] },
+
+    { "id": "leak_through", "order": 340, "type": "select",
+      "label": "Бывают ли эпизоды, когда кровь протекает на одежду/постель, несмотря на использование прокладки/тампона?",
+      "required": true,
+      "options": [
+        { "value": "never", "label": "Никогда" },
+        { "value": "1_2_cycle", "label": "1–2 раза за цикл" },
+        { "value": "more", "label": "Чаще" }
+      ] },
+
+    { "id": "menopause_status", "order": 350, "type": "select", "label": "Менопауза", "required": true,
+      "options": [ { "value": "no", "label": "Нет" }, { "value": "yes", "label": "Да" } ] },
+
+    { "id": "menopause_age", "order": 360, "type": "number", "label": "Если менопауза есть, укажите возраст",
+      "constraints": { "min": 30, "max": 60, "step": 1 },
+      "show_if": { "id": "menopause_status", "eq": "yes" },
+      "required_if": { "id": "menopause_status", "eq": "yes" } },
+
+    { "id": "contraception", "order": 370, "type": "select", "label": "Контрацепция", "required": true,
+      "options": [
+        { "value": "barrier", "label": "Барьерная" },
+        { "value": "coc", "label": "Прием КОК" },
+        { "value": "sterilization", "label": "Хирургическая стерилизация" },
+        { "value": "none", "label": "Отсутствует" }
+      ] },
+
+    { "id": "gyne_diseases", "order": 380, "type": "multiselect",
+      "label": "Гинекологические заболевания (можно несколько вариантов)",
+      "required": true,
+      "options": [
+        { "value": "inflammatory", "label": "Воспалительные заболевания (абсцесс БЖ, кольпит, сальпингит, эндометрит)" },
+        { "value": "fibroid", "label": "Миома матки" },
+        { "value": "benign_ovarian", "label": "Доброкачественные опухоли яичников" },
+        { "value": "endometrium_polyps_hyperplasia", "label": "Полипы и гиперплазия эндометрия" },
+        { "value": "none", "label": "Отсутствуют" }
+      ],
+      "constraints": { "exclusiveOptions": ["none"] } },
+
+    { "id": "relatives_myopia_mvp_varicose", "order": 390, "type": "select",
+      "label": "Есть ли у близких родственников: миопия, пролапс митрального клапана, варикозное расширение вен нижних конечностей?",
+      "required": true,
+      "options": [ { "value": "yes", "label": "Да" }, { "value": "no", "label": "Нет" }, { "value": "dont_know", "label": "Не знаю" } ] },
+
+    { "id": "mother_incontinence", "order": 400, "type": "select", "label": "Есть ли недержание мочи у матери?", "required": true,
+      "options": [ { "value": "yes", "label": "Да" }, { "value": "no", "label": "Нет" }, { "value": "dont_know", "label": "Не знаю" } ] },
+
+    { "id": "female_relatives_incontinence", "order": 410, "type": "select", "label": "Есть ли недержание мочи у близких родственников женской линии?", "required": true,
+      "options": [ { "value": "yes", "label": "Да" }, { "value": "no", "label": "Нет" }, { "value": "dont_know", "label": "Не знаю" } ] },
+
+    { "id": "childhood_enuresis", "order": 420, "type": "boolean",
+      "label": "Были ли у Вас в детстве эпизоды ночного недержания мочи (энурез)?",
+      "required": true, "labels": { "true": "Да", "false": "Нет" } },
+
+    { "id": "stool_frequency", "order": 430, "type": "select", "label": "Как часто у Вас бывает стул?", "required": true,
+      "options": [
+        { "value": "daily", "label": "Каждый день или почти каждый день" },
+        { "value": "3_5_week", "label": "3–5 раз в неделю" },
+        { "value": "1_2_week", "label": "1–2 раза в неделю" },
+        { "value": "less_1_week", "label": "Реже 1 раза в неделю" }
+      ] },
+
+    { "id": "defecation_features", "order": 440, "type": "multiselect",
+      "label": "Как проходит дефекация? (можно несколько вариантов)",
+      "required": true,
+      "options": [
+        { "value": "three_minute", "label": "Трехминутная" },
+        { "value": "single", "label": "Однократно" },
+        { "value": "no_straining", "label": "Не натуживаясь" },
+        { "value": "daily_fiber", "label": "Ежедневный прием пищевых волокон" }
+      ] },
+
+    { "id": "straining_frequency", "order": 450, "type": "select",
+      "label": "Как часто вам приходится сильно тужиться при дефекации?",
+      "required": true,
+      "options": [
+        { "value": "almost_never", "label": "Почти никогда" },
+        { "value": "less_half", "label": "Реже половины актов дефекации" },
+        { "value": "more_half", "label": "Более чем в половине актов дефекации" },
+        { "value": "almost_always", "label": "Почти всегда" }
+      ] },
+
+    { "id": "laxatives_frequency", "order": 460, "type": "select",
+      "label": "Как часто вы используете слабительные (таблетки, порошки, свечи, микроклизмы) для опорожнения кишечника?",
+      "required": true,
+      "options": [
+        { "value": "never", "label": "Никогда" },
+        { "value": "less_monthly", "label": "Реже 1 раза в месяц" },
+        { "value": "1_3_month", "label": "1–3 раза в месяц" },
+        { "value": "weekly_or_more", "label": "Еженедельно или чаще" }
+      ] },
+
+    { "id": "leak_with_straining_defecation", "order": 470, "type": "select",
+      "label": "Замечаете ли вы усиление подтекания мочи во время сильного натуживания при дефекации?",
+      "required": true,
+      "options": [
+        { "value": "no", "label": "Нет, не замечаю" },
+        { "value": "sometimes", "label": "Иногда" },
+        { "value": "often", "label": "Часто" },
+        { "value": "always", "label": "Всегда или почти всегда" }
+      ] },
+
+    { "id": "incontinence_worse_no_stool", "order": 480, "type": "select",
+      "label": "Замечаете ли вы ухудшение симптомов недержания мочи в дни, когда не было стула?",
+      "required": true,
+      "options": [
+        { "value": "no", "label": "Нет" },
+        { "value": "sometimes", "label": "Иногда" },
+        { "value": "often", "label": "Часто" }
+      ] },
+
+    { "id": "sex_life", "order": 490, "type": "select", "label": "Живете ли Вы в настоящее время половой жизнью?", "required": true,
+      "options": [
+        { "value": "week_1_2", "label": "Частота в неделю: 1–2 раза" },
+        { "value": "week_3_4", "label": "Частота в неделю: 3–4" },
+        { "value": "week_5_plus", "label": "Частота в неделю: 5 и более" },
+        { "value": "month_1_2", "label": "Частота в месяц: 1–2 раза" },
+        { "value": "month_3_4", "label": "Частота в месяц: 3–4" },
+        { "value": "month_5_plus", "label": "Частота в месяц: 5 и более" },
+        { "value": "rare_or_no", "label": "Нет (реже 1 раза в месяц)" }
+      ] },
+
+    { "id": "sex_life_reason", "order": 500, "type": "select",
+      "label": "Если нет/редко, связана ли редкая/отсутствующая половая жизнь с проблемами мочеиспускания или тазового дна (недержание, пролапс, боль)?",
+      "show_if": { "id": "sex_life", "eq": "rare_or_no" },
+      "required_if": { "id": "sex_life", "eq": "rare_or_no" },
+      "options": [
+        { "value": "no", "label": "Нет" },
+        { "value": "partly", "label": "Частично" },
+        { "value": "mostly", "label": "В основном из-за этих проблем" }
+      ] },
+
+    { "id": "pelvic_surgeries", "order": 510, "type": "multiselect",
+      "label": "Операции на органах малого таза (можно несколько вариантов)",
+      "required": true,
+      "options": [
+        { "value": "laparotomy", "label": "Лапаротомии" },
+        { "value": "laparoscopy", "label": "Лапароскопии" },
+        { "value": "none", "label": "Не было" }
+      ],
+      "constraints": { "exclusiveOptions": ["none"] } },
+
+    { "id": "child_birth_weight_g", "order": 520, "type": "number",
+      "label": "Вес детей при рождении (г)",
+      "constraints": { "min": 500, "max": 5000, "step": 10 },
+      "show_if": { "id": "births_count", "gt": 0 },
+      "required_if": { "id": "births_count", "gt": 0 } },
+
+    { "id": "self_birth_weight_g", "order": 530, "type": "number", "label": "С какой массой тела Вы сами родились? (г)",
+      "required": true, "constraints": { "min": 500, "max": 5000, "step": 10 } },
+
+    { "id": "delivery_mode", "order": 540, "type": "select", "label": "Родоразрешение",
+      "show_if": { "id": "births_count", "gt": 0 },
+      "required_if": { "id": "births_count", "gt": 0 },
+      "options": [
+        { "value": "vaginal", "label": "Через естественные пути" },
+        { "value": "c_section", "label": "Путем кесарева сечения" }
+      ] },
+
+    { "id": "perineal_tears", "order": 550, "type": "select",
+      "label": "Были ли у вас разрывы промежности/влагалища во время родов?",
+      "show_if": { "id": "births_count", "gt": 0 },
+      "required_if": { "id": "births_count", "gt": 0 },
+      "options": [
+        { "value": "no", "label": "Нет" },
+        { "value": "deg_1_2", "label": "Да, 1–2 степени" },
+        { "value": "deg_3_4", "label": "Да, 3–4 степени (сфинктер/прямая кишка)" }
+      ] },
+
+    { "id": "episiotomy", "order": 560, "type": "boolean",
+      "label": "Проводили ли Вам эпизиотомию (рассечение/разрез промежности)?",
+      "show_if": { "id": "births_count", "gt": 0 },
+      "required_if": { "id": "births_count", "gt": 0 },
+      "labels": { "true": "Да", "false": "Нет" } },
+
+    { "id": "instrumental_delivery", "order": 570, "type": "boolean",
+      "label": "Были ли роды инструментальными (щипцы, вакуум-экстракция)?",
+      "show_if": { "id": "births_count", "gt": 0 },
+      "required_if": { "id": "births_count", "gt": 0 },
+      "labels": { "true": "Да", "false": "Нет" } },
+
+    { "id": "diagnoses", "order": 580, "type": "multiselect",
+      "label": "Отметьте, какие заболевания у Вас диагностированы врачом (можно несколько вариантов)",
+      "required": true,
+      "options": [
+        { "value": "hypertension", "label": "Артериальная гипертензия" },
+        { "value": "diabetes", "label": "Сахарный диабет (1 или 2 типа)" },
+        { "value": "chronic_constipation", "label": "Хронические запоры (стул <3 раз в неделю)" },
+        { "value": "copd_asthma", "label": "ХОБЛ или бронхиальная астма" },
+        { "value": "osteoporosis_osteoarthritis", "label": "Остеопороз или выраженный остеоартрит" },
+        { "value": "ihd_chf", "label": "Ишемическая болезнь сердца / хроническая сердечная недостаточность" },
+        { "value": "ckd", "label": "Хроническая болезнь почек" },
+        { "value": "thyroid", "label": "Заболевания щитовидной железы (гипо-/гипертиреоз)" },
+        { "value": "neuro", "label": "Неврологические заболевания (инсульт, РС, Паркинсон и др.)" },
+        { "value": "depression_anxiety", "label": "Депрессия или тревожное расстройство (диагноз психиатра/психотерапевта)" },
+        { "value": "leg_artery_vein", "label": "Заболевания артерий и вен нижних конечностей" },
+        { "value": "none", "label": "Нет из перечисленного" }
+      ],
+      "constraints": { "exclusiveOptions": ["none"] } },
+
+    { "id": "toilet_access_work", "order": 590, "type": "select",
+      "label": "Есть ли на работе свободный доступ к туалету в течение дня?",
+      "required": true,
+      "options": [
+        { "value": "unrestricted", "label": "Да, без ограничений" },
+        { "value": "limited", "label": "Да, но с ограничениями (по времени, по сменам, по разрешению)" },
+        { "value": "almost_none", "label": "Практически нет доступа по несколько часов подряд" }
+      ] },
+
+    { "id": "interrupt_work_due_urination", "order": 600, "type": "select",
+      "label": "Приходится ли Вам прерывать работу из-за мочеиспускания или подтекания мочи?",
+      "required": true,
+      "options": [
+        { "value": "no", "label": "Нет" },
+        { "value": "yes", "label": "Да" },
+        { "value": "sometimes", "label": "Иногда" },
+        { "value": "often", "label": "Часто" }
+      ] },
+
+    { "id": "incontinence_work_impact", "order": 610, "type": "select",
+      "label": "Насколько недержание мочи мешает вам на работе?",
+      "required": true,
+      "options": [
+        { "value": "not_at_all", "label": "Совсем не мешает" },
+        { "value": "little", "label": "Немного" },
+        { "value": "moderate", "label": "Умеренно" },
+        { "value": "severe", "label": "Сильно" }
+      ] },
+
+    { "id": "work_changes_due_incontinence", "order": 620, "type": "select",
+      "label": "Из-за недержания мочи Вы:",
+      "required": true,
+      "options": [
+        { "value": "no_change", "label": "Не меняли свои рабочие обязанности" },
+        { "value": "avoid_tasks", "label": "Избегаете отдельных задач (подъём тяжестей, длительные мероприятия без перерывов)" },
+        { "value": "avoid_trips", "label": "Отказываетесь от командировок/поездок" },
+        { "value": "considered_job_change", "label": "Рассматривали смену работы/поиска работы или уже сменили работу" }
+      ] },
+
+    { "id": "embarrassed_smell_work", "order": 630, "type": "select",
+      "label": "Насколько Вы стесняетесь возможного запаха/«аварии» на работе?",
+      "required": true,
+      "options": [
+        { "value": "not_at_all", "label": "Совсем не беспокоит" },
+        { "value": "little", "label": "Немного" },
+        { "value": "moderate", "label": "Умеренно" },
+        { "value": "severe", "label": "Сильно" }
+      ] },
+
+    { "id": "restrict_drinking_work", "order": 640, "type": "select",
+      "label": "Приходится ли Вам ограничивать питьё перед/во время работы из-за страха неудержания мочи?",
+      "required": true,
+      "options": [
+        { "value": "no", "label": "Нет" },
+        { "value": "sometimes", "label": "Иногда" },
+        { "value": "often", "label": "Часто" }
+      ] },
+
+    { "id": "overall_work_ability_impact", "order": 650, "type": "select",
+      "label": "В целом, насколько недержание мочи ухудшает Вашу способность работать (или учиться)?",
+      "required": true,
+      "options": [
+        { "value": "not_at_all", "label": "Совсем не ухудшает" },
+        { "value": "little", "label": "Немного" },
+        { "value": "moderate", "label": "Умеренно" },
+        { "value": "severe", "label": "Сильно" }
+      ] },
+
+    { "id": "ever_leaked_urine", "order": 660, "type": "select",
+      "label": "Случалось ли Вам хоть раз непроизвольно потерять даже небольшое количество мочи?",
+      "required": true,
+      "options": [
+        { "value": "no", "label": "Нет" },
+        { "value": "1_2_times", "label": "Да, 1–2 раза" },
+        { "value": "more_often", "label": "Да, чаще" }
+      ] },
+
+    { "id": "leak_triggers", "order": 670, "type": "select",
+      "label": "Бывает ли подтекание мочи при:",
+      "required": true,
+      "options": [
+        { "value": "cough_sneeze_laugh_lift", "label": "Кашле, смехе, чихании, подъёме тяжестей" },
+        { "value": "walk_run_jump", "label": "Быстрой ходьбе, беге, прыжках" },
+        { "value": "both", "label": "И при первом, и при втором" },
+        { "value": "none", "label": "Нет, не бывает" }
+      ] },
+
+    { "id": "daytime_frequency_bother", "order": 680, "type": "select",
+      "label": "Беспокоит ли Вас частое мочеиспускание днем?",
+      "required": true,
+      "options": [
+        { "value": "not", "label": "Не беспокоит" },
+        { "value": "slightly", "label": "Немного беспокоит" },
+        { "value": "moderately", "label": "Умеренно беспокоит" },
+        { "value": "quite", "label": "Достаточно сильно беспокоит" },
+        { "value": "strongly", "label": "Сильно беспокоит" },
+        { "value": "very_strongly", "label": "Очень сильно беспокоит" }
+      ] },
+
+    { "id": "urgency_bother", "order": 690, "type": "select",
+      "label": "Бывает ли, что внезапно возникает очень сильный позыв к мочеиспусканию, и вы не всегда успеваете добежать до туалета?",
+      "required": true,
+      "options": [
+        { "value": "not", "label": "Не беспокоит" },
+        { "value": "slightly", "label": "Немного беспокоит" },
+        { "value": "moderately", "label": "Умеренно беспокоит" },
+        { "value": "quite", "label": "Достаточно сильно беспокоит" },
+        { "value": "strongly", "label": "Сильно беспокоит" },
+        { "value": "very_strongly", "label": "Очень сильно беспокоит" }
+      ] },
+
+    { "id": "post_void_dribble", "order": 700, "type": "select",
+      "label": "Отмечаете ли вы «капельки» мочи после окончания мочеиспускания, уже при отходе от туалета?",
+      "required": true,
+      "options": [ { "value": "no", "label": "Нет" }, { "value": "sometimes", "label": "Иногда" }, { "value": "often", "label": "Часто" } ] },
+
+    { "id": "precautionary_toilet", "order": 710, "type": "select",
+      "label": "Приходится ли вам заранее «на всякий случай» посещать туалет перед выходом из дома/лекцией/сменой?",
+      "required": true,
+      "options": [ { "value": "no", "label": "Нет" }, { "value": "sometimes", "label": "Иногда" }, { "value": "often", "label": "Часто" } ] },
+
+    { "id": "pantyliners_due_leak", "order": 720, "type": "boolean",
+      "label": "Используете ли вы ежедневные прокладки именно из-за эпизодических подтеканий мочи?",
+      "required": true, "labels": { "true": "Да", "false": "Нет" } },
+
+    { "id": "nocturia_times", "order": 730, "type": "number",
+      "label": "Сколько раз просыпаетесь в ночное время для посещения туалета?",
+      "required": true, "constraints": { "min": 0, "max": 30, "step": 1 } },
+
+    { "id": "pads_per_day", "order": 740, "type": "select",
+      "label": "Сколько ежедневных прокладок Вы используете в день?",
+      "required": true,
+      "options": [
+        { "value": "none", "label": "Нет" },
+        { "value": "1_2", "label": "1–2 прокладки" },
+        { "value": "3_4", "label": "3–4 прокладки" },
+        { "value": "5plus", "label": "5 и более прокладок" }
+      ] },
+
+    { "id": "sport", "order": 750, "type": "boolean", "label": "Занимаетесь ли Вы спортом?", "required": true,
+      "labels": { "true": "Да", "false": "Нет" } },
+
+    { "id": "sport_frequency", "order": 760, "type": "select", "label": "Как часто занимаетесь спортом?",
+      "show_if": { "id": "sport", "eq": true },
+      "required_if": { "id": "sport", "eq": true },
+      "options": [
+        { "value": "1_week", "label": "1 раз в неделю" },
+        { "value": "2_3_week", "label": "2–3 раза в неделю" }
+      ] },
+
+    { "id": "treatment_received", "order": 770, "type": "boolean",
+      "label": "Получали ли лечение по поводу недержания мочи?", "required": true,
+      "labels": { "true": "Да", "false": "Нет" } },
+
+    { "id": "treatment_type", "order": 780, "type": "multiselect", "label": "Какое лечение?",
+      "show_if": { "id": "treatment_received", "eq": true },
+      "required_if": { "id": "treatment_received", "eq": true },
+      "options": [
+        { "value": "meds", "label": "Лекарственная терапия" },
+        { "value": "gymnastics", "label": "Гимнастика" },
+        { "value": "fillers", "label": "Филлеры на основе гиалуроновой кислоты" },
+        { "value": "laser", "label": "Лазерная коррекция недержания мочи" }
+      ] },
+
+    { "id": "treatment_satisfaction", "order": 790, "type": "select", "label": "Удовлетворены ли Вы эффектом от лечения?",
+      "show_if": { "id": "treatment_received", "eq": true },
+      "required_if": { "id": "treatment_received", "eq": true },
+      "options": [
+        { "value": "yes_full", "label": "Да, полностью" },
+        { "value": "no", "label": "Нет" },
+        { "value": "yes_partial", "label": "Да, частично" }
+      ] }
+  ]
+}

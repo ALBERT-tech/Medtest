@@ -1,0 +1,70 @@
+<!-- index.html -->
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Анкета</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="app" id="app">
+    <header class="header">
+      <div class="brand">Анкета</div>
+      <div class="sub" id="qMeta"></div>
+    </header>
+
+    <!-- Step 0: code -->
+    <section class="card" id="screenCode">
+      <h1 class="h1">Введите шифр</h1>
+      <p class="p muted">Шифр вводится перед началом анкеты. ФИО не требуется.</p>
+
+      <label class="label" for="codeInput">Шифр</label>
+      <input id="codeInput" class="input" type="text" autocomplete="off" placeholder="Например: A123" />
+
+      <div class="row">
+        <button id="btnStart" class="btn primary">Начать</button>
+      </div>
+
+      <div class="error" id="codeError" hidden></div>
+    </section>
+
+    <!-- Step 1..N: questionnaire -->
+    <section class="card" id="screenQuestion" hidden>
+      <div class="progress">
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-text" id="progressText"></div>
+      </div>
+
+      <div id="questionHost"></div>
+
+      <div class="nav">
+        <button id="btnBack" class="btn">Назад</button>
+        <button id="btnNext" class="btn primary">Далее</button>
+      </div>
+
+      <div class="error" id="qError" hidden></div>
+    </section>
+
+    <!-- Done -->
+    <section class="card" id="screenDone" hidden>
+      <h1 class="h1">Готово</h1>
+      <p class="p">Ответы сохранены.</p>
+
+      <div class="row">
+        <button id="btnRestart" class="btn">Новый опрос</button>
+      </div>
+    </section>
+
+    <!-- Global status -->
+    <footer class="footer">
+      <div class="status" id="status"></div>
+    </footer>
+  </div>
+
+  <script src="./config.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>
