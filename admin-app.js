@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Данные грузим после попытки загрузки questions.json
         Promise.resolve(questionsPromise)
-            .then(() => loadData())
+            .then(() => ())
             .catch(err => {
                 console.error(err);
                 showStatus(`❌ Ошибка загрузки данных: ${err.message}`, 'error');
@@ -254,14 +254,17 @@ async function loadData() {
     try {
         showStatus('Загрузка данных...', 'loading');
 
-        const result = await apiRequest('/admin/responses');
+       const result = await apiRequest('/admin/responses');
 
-        // Backend возвращает { data: [...] }
-        adminState.allData = result.data || [];
-        adminState.filteredData = [...adminState.allData];
+// backend может вернуть либо массив, либо { data: массив }
+const rows = Array.isArray(result) ? result : (result?.data || []);
 
-        updateStats();
-        updateTable();
+adminState.allData = rows;
+adminState.filteredData = [...rows];
+
+updateStats();
+updateTable(); // или renderTable — что у тебя используется
+
 
         showStatus(`✓ Загружено записей: ${adminState.allData.length}`);
 
