@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Панель администратора — Выгрузка данных</title>
+    <link rel="stylesheet" href="admin-styles.css">
+    <!-- Библиотека для работы с Excel -->
+<!-- ✅ ВАРИАНТ 2 (unpkg) -->
+<script src="https://unpkg.com/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+
+</head>
+<body>
+    <div id="app" class="admin-container">
+        <!-- Экран входа -->
+        <div id="screen-login" class="screen active">
+            <div class="login-box">
+                <h1>🔐 Панель администратора</h1>
+                <p class="subtitle">Программа оценки риска недержания мочи</p>
+                
+                <form id="login-form" class="form">
+                    <div class="form-group">
+                        <label for="password">Пароль администратора:</label>
+                        <input 
+                            type="password" 
+                            id="password" 
+                            name="password" 
+                            placeholder="Введите пароль"
+                            required
+                        >
+                        <div id="login-error" class="error-message"></div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Войти</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Экран админ-панели -->
+        <div id="screen-admin" class="screen">
+            <div class="admin-header">
+                <h1>📊 Администраторская панель</h1>
+                <button type="button" id="btn-logout" class="btn btn-secondary">Выйти</button>
+            </div>
+
+            <div class="admin-content">
+                <!-- Статистика -->
+                <div class="stats-box">
+                    <div class="stat-item">
+                        <div class="stat-label">Всего ответов:</div>
+                        <div class="stat-value" id="stat-total">0</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Последний ответ:</div>
+                        <div class="stat-value" id="stat-latest">-</div>
+                    </div>
+                   
+                </div>
+
+                <!-- Фильтры и экспорт -->
+                <div class="export-box">
+                    <h2>📥 Выгрузка данных</h2>
+                    
+                    <div class="filters">
+                        <div class="filter-group">
+                            <label for="filter-from-date">От даты:</label>
+                            <input type="date" id="filter-from-date">
+                        </div>
+                        <div class="filter-group">
+                            <label for="filter-to-date">По дату:</label>
+                            <input type="date" id="filter-to-date">
+                        </div>
+                        <button type="button" id="btn-apply-filters" class="btn btn-secondary">Применить фильтры</button>
+                    </div>
+
+                    <div class="export-buttons">
+                        <button type="button" id="btn-export-excel" class="btn btn-primary btn-large">
+                            📊 Скачать Excel (.xlsx)
+                        </button>
+                        <button type="button" id="btn-export-csv" class="btn btn-secondary btn-large">
+                            📄 Скачать CSV
+                        </button>
+                        <button type="button" id="btn-export-json" class="btn btn-secondary btn-large">
+                            { } Скачать JSON
+                        </button>
+                    </div>
+
+                    <div id="export-status" class="status-message"></div>
+                </div>
+
+                <!-- Таблица с предпросмотром -->
+                <div class="table-box">
+                    <h2>📋 Предпросмотр данных</h2>
+                    <div id="table-container" class="table-container">
+                        <p class="loading">Загрузка данных...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="admin-app.js?v=20260201-3"></script>
+</body>
+</html>
