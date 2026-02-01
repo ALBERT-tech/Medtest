@@ -389,24 +389,38 @@
   // ------------------------
   // Supabase insert via REST
   // ------------------------
-  async function submitToSupabase(payload) {
-    const url = `${CFG.SUPABASE_URL}/rest/v1/${CFG.TABLE_NAME}`;
-    const res = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "apikey": CFG.SUPABASE_ANON_KEY,
-        "Authorization": `Bearer ${CFG.SUPABASE_ANON_KEY}`,
-        "Prefer": "return=representation"
-      },
-      body: JSON.stringify(payload)
-    });
+ async function submitToSupabase(payload) {
+  const url = `${CFG.SUPABASE_URL}/rest/v1/${CFG.TABLE_NAME}`;
 
-    const text = await res.text();
-    if (!res.ok) {
-      // Supabase often returns JSON; but keep it simple.
-      throw new Error(`Supabase error ${res.status}: ${text}`);
-    }
+  // Диагностика (временно): убедись, что ключ реально подхватился
+  if (!CFG.SUPABASE_ANON_KEY) {
+    throw new Error("Нет SUPABASE_ANON_KEY. Проверь config.js и порядок подключения.");
+  }
+
+  const res = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "apikey": CFG.SUPABASE_ANON_KEY,
+      "Authorization": `Bearer ${CFG.SUPABASE_ANON_KEY}`,
+      "Prefer": "return=representation"
+    },
+    body: JSON.stringify(payload)
+  });
+
+  const text = await res.text();
+  if (!res.ok) {
+    throw new Error(`Supabase error ${res.status}: ${text}`);
+  }
+
+  try {
+    const data = JSON.parse(text);
+    return Array.isArray(data) ? data[0] : data;
+  } catch {
+    return null;
+  }
+}
+
 
     // return inserted row(s)
     try {
@@ -588,3 +602,4 @@
 
   boot();
 })();
+
