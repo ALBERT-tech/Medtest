@@ -3,7 +3,7 @@
 // Все секреты на backend, фронтенд работает через API
 
 // Конфигурация (БЕЗ КЛЮЧЕЙ И ПАРОЛЕЙ!)
-const BACKEND_URL = 'https://miccii.onrender.com'; // Адрес backend сервера
+const BACKEND_URL = 'https://medtest-z2ze.onrender.com'; // Адрес backend сервера
 
 // Состояние админ-панели
 const adminState = {
