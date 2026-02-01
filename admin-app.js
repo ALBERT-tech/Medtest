@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // ------------------------
 async function bootstrapQuestions() {
     // admin лежит в /admin/, questions.json лежит в корне репо
-    const res = await fetch('../questions.json', { cache: 'no-store' });
+    const res = await fetch('questions.json', { cache: 'no-store' });
     if (!res.ok) throw new Error(`Не удалось загрузить questions.json (${res.status})`);
     QUESTIONS_SPEC = await res.json();
     QUESTION_INDEX = buildQuestionIndex(QUESTIONS_SPEC);
@@ -186,16 +186,21 @@ async function handleLogin(event) {
     event.preventDefault();
 
     const password = document.getElementById('password').value;
-    const loginBtn = document.getElementById('login-btn');
+   const loginBtn =
+    event.submitter ||
+    event.currentTarget.querySelector('button[type="submit"]');
 
-    try {
+try {
+    if (loginBtn) {
         loginBtn.disabled = true;
         loginBtn.textContent = 'Вход...';
+    }
 
-        const result = await apiRequest('/admin/login', {
-            method: 'POST',
-            body: JSON.stringify({ password })
-        });
+    const result = await apiRequest('/admin/login', {
+        method: 'POST',
+        body: JSON.stringify({ password })
+    });
+
 
         // Сохранить JWT токен
         adminState.jwtToken = result.token;
@@ -215,8 +220,11 @@ async function handleLogin(event) {
         console.error('Ошибка входа:', error);
         showStatus(`❌ Ошибка входа: ${error.message}`, 'error');
     } finally {
-        loginBtn.disabled = false;
-        loginBtn.textContent = 'Войти';
+        if (loginBtn) {
+  loginBtn.disabled = false;
+  loginBtn.textContent = 'Войти';
+}
+
     }
 }
 
