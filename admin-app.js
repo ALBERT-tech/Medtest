@@ -319,38 +319,60 @@ function updateStats() {
 }
 
 function updateTable() {
-    const tbody = document.getElementById('data-table-body');
-    tbody.innerHTML = '';
+  const container = document.getElementById('table-container');
+  if (!container) return;
 
-    // Показать последние 50 записей
-    const recentData = adminState.filteredData.slice(0, 50);
+  const rows = adminState.filteredData || [];
 
-    recentData.forEach(row => {
-        const tr = document.createElement('tr');
+  if (!rows.length) {
+    container.innerHTML = '<p class="loading">Нет данных для отображения</p>';
+    return;
+  }
 
-        // Шифр
-        const codeCell = document.createElement('td');
-        codeCell.textContent = row.code || '';
-        tr.appendChild(codeCell);
+  const preview = rows.slice(0, 50);
 
-        // Дата
-        const dateCell = document.createElement('td');
-        if (row.created_at) {
-            dateCell.textContent = new Date(row.created_at).toLocaleString('ru-RU');
-        }
-        tr.appendChild(dateCell);
+  let html = `
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Дата</th>
+          <th>Шифр</th>
+          <th>Ответы</th>
+        </tr>
+      </thead>
+      <tbody>
+  `;
 
-        // Основные поля (пример)
-        const summaryCell = document.createElement('td');
-        const answers = row.answers || {};
-        const age = answers.age || answers.age_years || '';
-        const weight = answers.weight || answers.weight_kg || '';
-        const height = answers.height || answers.height_cm || '';
-        summaryCell.textContent = `Возраст: ${age}, Вес: ${weight}, Рост: ${height}`;
-        tr.appendChild(summaryCell);
+  for (const r of preview) {
+    const date = r.created_at
+      ? new Date(r.created_at).toLocaleString('ru-RU')
+      : '';
 
-        tbody.appendChild(tr);
-    });
+    html += `
+      <tr>
+        <td>${escapeHtml(date)}</td>
+        <td>${escapeHtml(r.code || '')}</td>
+        <td><pre>${escapeHtml(JSON.stringify(r.answers, null, 2))}</pre></td>
+      </tr>
+    `;
+  }
+
+  html += `
+      </tbody>
+    </table>
+    <p class="table-note">Показано ${preview.length} из ${rows.length} записей</p>
+  `;
+
+  container.innerHTML = html;
+}
+
+function escapeHtml(str) {
+  return String(str ?? '')
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#039;');
 }
 
 function handleApplyFilters() {
