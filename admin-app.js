@@ -302,11 +302,20 @@ function showStatus(message, type = 'info') {
 }
 
 function updateStats() {
-    const total = adminState.allData.length;
-    const filtered = adminState.filteredData.length;
+  // Всего записей
+  const total = adminState.allData.length;
 
-    document.getElementById('total-count').textContent = total.toString();
-    document.getElementById('filtered-count').textContent = filtered.toString();
+  const elTotal = document.getElementById('stat-total');
+  if (elTotal) elTotal.textContent = String(total);
+
+  // Последняя дата (если данные отсортированы по убыванию created_at)
+  const elLatest = document.getElementById('stat-latest');
+  if (elLatest) {
+    const latest = adminState.allData[0]?.created_at
+      ? new Date(adminState.allData[0].created_at).toLocaleString('ru-RU')
+      : '-';
+    elLatest.textContent = latest;
+  }
 }
 
 function updateTable() {
