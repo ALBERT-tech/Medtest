@@ -403,7 +403,7 @@
       "Content-Type": "application/json",
       "apikey": CFG.SUPABASE_ANON_KEY,
       "Authorization": `Bearer ${CFG.SUPABASE_ANON_KEY}`,
-      "Prefer": "return=representation"
+      "Prefer": "return=minimal"
     },
     body: JSON.stringify(payload)
   });
@@ -592,5 +592,6 @@
 
   boot();
 })();
+
 
 
