@@ -1,0 +1,44 @@
+name: Keep Supabase Awake
+
+# Будит бесплатную базу Supabase (опросник Medtest), чтобы не засыпала после 7 дней простоя.
+# Запуск каждые 2 дня + ручная кнопка (вкладка Actions → Run workflow).
+
+on:
+  schedule:
+    - cron: '37 6 */2 * *'   # каждые 2 дня, 06:37 UTC (≈09:37 МСК)
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout репозитория
+        uses: actions/checkout@v4
+
+      - name: Ping Supabase REST API
+        run: |
+          echo "Дёргаем Supabase (Medtest), чтобы сбросить таймер простоя"
+          CODE=$(curl -s -o /tmp/resp.txt -w "%{http_code}" \
+            "https://nbdhypvqoeytigopqkwr.supabase.co/rest/v1/responses?limit=1" \
+            -H "apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5iZGh5cHZxb2V5dGlnb3Bxa3dyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk5MzU1NTgsImV4cCI6MjA4NTUxMTU1OH0.FieVAdJfaw5OSd-9Ym0Bky2xx2M6fienNUyS4JvKcLg" \
+            -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5iZGh5cHZxb2V5dGlnb3Bxa3dyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk5MzU1NTgsImV4cCI6MjA4NTUxMTU1OH0.FieVAdJfaw5OSd-9Ym0Bky2xx2M6fienNUyS4JvKcLg")
+          echo "Ответ Supabase: HTTP $CODE"
+          cat /tmp/resp.txt || true
+          echo
+          if [ "$CODE" = "000" ] || [ "$CODE" -ge 500 ]; then
+            echo "::error::Supabase не ответил (HTTP $CODE)"
+            exit 1
+          fi
+
+      - name: Update keepalive timestamp
+        run: |
+          mkdir -p .github/keepalive
+          date -u +"%Y-%m-%dT%H:%M:%SZ" > .github/keepalive/last-ping.txt
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .github/keepalive/last-ping.txt
+          git commit -m "chore: keepalive $(date -u +%F)" || { echo "no changes"; exit 0; }
+          git push
