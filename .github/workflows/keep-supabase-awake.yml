@@ -1,15 +1,19 @@
 name: Keep Supabase Awake
 
 # Будит бесплатную базу Supabase (опросник Medtest), чтобы не засыпала после 7 дней простоя.
-# Запуск каждые 2 дня + ручная кнопка (вкладка Actions → Run workflow).
+# Усилено 2026-06-10 после письма-предупреждения от Supabase («недостаточная активность»
+# несмотря на пинги раз в 2 дня): теперь запуск КАЖДЫЙ ДЕНЬ, три читающих запроса
+# и один ПИШУЩИЙ — перезапись метки времени в таблице keepalive (создаётся отдельным SQL,
+# см. Downloads/supabase-keepalive-table.sql; пока таблицы нет — шаг даст warning, не упадёт).
+# Ручная кнопка: вкладка Actions → Run workflow.
 
 on:
   schedule:
-    - cron: '37 6 */2 * *'   # каждые 2 дня, 06:37 UTC (≈09:37 МСК)
+    - cron: '37 6 * * *'   # каждый день, 06:37 UTC (≈09:37 МСК)
   workflow_dispatch: {}
 
 permissions:
-  contents: write
+  contents: write            # чтобы коммитить метку времени
 
 jobs:
   ping:
@@ -18,27 +22,60 @@ jobs:
       - name: Checkout репозитория
         uses: actions/checkout@v4
 
-      - name: Ping Supabase REST API
+      - name: Пинг Supabase (3 чтения + 1 запись)
         run: |
-          echo "Дёргаем Supabase (Medtest), чтобы сбросить таймер простоя"
-          CODE=$(curl -s -o /tmp/resp.txt -w "%{http_code}" \
-            "https://nbdhypvqoeytigopqkwr.supabase.co/rest/v1/responses?limit=1" \
-            -H "apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5iZGh5cHZxb2V5dGlnb3Bxa3dyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk5MzU1NTgsImV4cCI6MjA4NTUxMTU1OH0.FieVAdJfaw5OSd-9Ym0Bky2xx2M6fienNUyS4JvKcLg" \
-            -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5iZGh5cHZxb2V5dGlnb3Bxa3dyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk5MzU1NTgsImV4cCI6MjA4NTUxMTU1OH0.FieVAdJfaw5OSd-9Ym0Bky2xx2M6fienNUyS4JvKcLg")
-          echo "Ответ Supabase: HTTP $CODE"
-          cat /tmp/resp.txt || true
-          echo
-          if [ "$CODE" = "000" ] || [ "$CODE" -ge 500 ]; then
-            echo "::error::Supabase не ответил (HTTP $CODE)"
+          BASE="https://nbdhypvqoeytigopqkwr.supabase.co"
+          APIKEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5iZGh5cHZxb2V5dGlnb3Bxa3dyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk5MzU1NTgsImV4cCI6MjA4NTUxMTU1OH0.FieVAdJfaw5OSd-9Ym0Bky2xx2M6fienNUyS4JvKcLg"
+
+          echo "1) REST: SELECT одной строки из responses"
+          CODE1=$(curl -s -o /tmp/r1.txt -w "%{http_code}" \
+            "$BASE/rest/v1/responses?select=id&limit=1" \
+            -H "apikey: $APIKEY" \
+            -H "Authorization: Bearer $APIKEY")
+          echo "HTTP $CODE1"; cat /tmp/r1.txt || true; echo
+
+          echo "2) REST: COUNT строк в responses"
+          CODE2=$(curl -s -o /tmp/r2.txt -w "%{http_code}" \
+            "$BASE/rest/v1/responses?select=id" \
+            -H "apikey: $APIKEY" \
+            -H "Authorization: Bearer $APIKEY" \
+            -H "Prefer: count=exact" \
+            -H "Range: 0-0")
+          echo "HTTP $CODE2"; echo
+
+          echo "3) Auth health"
+          CODE3=$(curl -s -o /tmp/r3.txt -w "%{http_code}" \
+            "$BASE/auth/v1/health" \
+            -H "apikey: $APIKEY")
+          echo "HTTP $CODE3"; cat /tmp/r3.txt || true; echo
+
+          echo "4) WRITE: перезаписываем метку времени в keepalive"
+          TS=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          CODE4=$(curl -s -o /tmp/r4.txt -w "%{http_code}" -X PATCH \
+            "$BASE/rest/v1/keepalive?id=eq.1" \
+            -H "apikey: $APIKEY" \
+            -H "Authorization: Bearer $APIKEY" \
+            -H "Content-Type: application/json" \
+            -H "Prefer: return=representation" \
+            -d "{\"last_ping\": \"$TS\"}")
+          echo "HTTP $CODE4"; cat /tmp/r4.txt || true; echo
+          if [ "$CODE4" = "200" ] && grep -q "last_ping" /tmp/r4.txt; then
+            echo "Write-пинг прошёл: $TS"
+          else
+            echo "::warning::Write-пинг не прошёл (HTTP $CODE4). Создана ли таблица keepalive? SQL лежит в Downloads/supabase-keepalive-table.sql"
+          fi
+
+          if [ "$CODE1" = "000" ] || [ "$CODE1" -ge 500 ]; then
+            echo "::error::Supabase не ответил (HTTP $CODE1)"
             exit 1
           fi
 
-      - name: Update keepalive timestamp
+      - name: Обновить метку времени (держит крон живым)
         run: |
           mkdir -p .github/keepalive
           date -u +"%Y-%m-%dT%H:%M:%SZ" > .github/keepalive/last-ping.txt
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add .github/keepalive/last-ping.txt
-          git commit -m "chore: keepalive $(date -u +%F)" || { echo "no changes"; exit 0; }
+          git commit -m "chore: keepalive $(date -u +%F)" || { echo "нет изменений"; exit 0; }
           git push
