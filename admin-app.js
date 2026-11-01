@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Данные грузим после попытки загрузки questions.json
         Promise.resolve(questionsPromise)
-          
+            .then(() => loadData())
             .catch(err => {
                 console.error(err);
                 showStatus(`❌ Ошибка загрузки данных: ${err.message}`, 'error');
