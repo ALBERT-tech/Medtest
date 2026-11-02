@@ -1,3 +1,5 @@
+# Автоматический запуск отключён после переноса Medtest на Robotender 02.11.2026.
+# Ручной запуск оставлен для доступа к прежней резервной базе.
 name: Keep Supabase Awake
 
 # Будит бесплатную базу Supabase (опросник Medtest), чтобы не засыпала после 7 дней простоя.
@@ -8,8 +10,6 @@ name: Keep Supabase Awake
 # Ручная кнопка: вкладка Actions → Run workflow.
 
 on:
-  schedule:
-    - cron: '37 6 * * *'   # каждый день, 06:37 UTC (≈09:37 МСК)
   workflow_dispatch: {}
 
 permissions:
